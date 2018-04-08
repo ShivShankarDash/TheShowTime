@@ -1,4 +1,4 @@
-package com.example.shiv.theshowtime;
+package com.example.shiv.theshowtime.NetworkClasses;
 
 import com.google.gson.annotations.SerializedName;
 

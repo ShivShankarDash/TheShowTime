@@ -1,6 +1,7 @@
-package com.example.shiv.theshowtime;
+package com.example.shiv.theshowtime.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.shiv.theshowtime.Activities.MovieDetailActivity;
+import com.example.shiv.theshowtime.NetworkClasses.MovieResults;
+import com.example.shiv.theshowtime.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -55,7 +59,7 @@ onItemClickListener listener;
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
-      MovieResults results=movieResults.get(position);
+      final MovieResults results=movieResults.get(position);
       holder.movieTitle.setText(results.getOriginTitle());
       holder.itemView.setOnClickListener(new View.OnClickListener() {
           @Override
@@ -69,6 +73,13 @@ onItemClickListener listener;
        holder.itemView.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
+
+               Intent intent=new Intent(mcontext,MovieDetailActivity.class);
+               intent.putExtra("MovieId",results.getId());
+               mcontext.startActivity(intent);
+
+
+
 
            }
        });
