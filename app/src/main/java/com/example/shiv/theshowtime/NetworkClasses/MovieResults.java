@@ -3,9 +3,13 @@ package com.example.shiv.theshowtime.NetworkClasses;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MovieResults {
 
+
+    @SerializedName("genres")
+     List<Genres> genres;
     @SerializedName("id")
     private long id;
     @SerializedName("vote_count")
@@ -28,6 +32,31 @@ public class MovieResults {
     private String overview;
     @SerializedName("release_date")
     private String releaseDate;
+    @SerializedName("adult")
+    private Boolean adult;
+
+    public Boolean getAdult() {
+        return adult;
+    }
+
+    public void setAdult(Boolean adult) {
+        this.adult = adult;
+    }
+
+    public MovieResults(long id, int votes, double votesAvg, String title, String language, String originTitle, ArrayList<Integer> genreIds, String backdropPath, String posterPath, String overview, String releaseDate, Boolean adult) {
+        this.id = id;
+        this.votes = votes;
+        this.votesAvg = votesAvg;
+        this.title = title;
+        this.language = language;
+        this.originTitle = originTitle;
+        this.genreIds = genreIds;
+        this.backdropPath = backdropPath;
+        this.posterPath = posterPath;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+        this.adult = adult;
+    }
 
     public MovieResults(long id, int votes, double votesAvg, String title, String language, String originTitle, ArrayList<Integer> genreIds, String backdropPath, String posterPath, String overview, String releaseDate) {
         this.id = id;

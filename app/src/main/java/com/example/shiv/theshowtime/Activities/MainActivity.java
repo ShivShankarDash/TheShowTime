@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 
 import com.example.shiv.theshowtime.Adapters.MoviesAdapter;
 import com.example.shiv.theshowtime.Fragments.AllMoviesFragment;
+import com.example.shiv.theshowtime.NetworkClasses.Constants;
 import com.example.shiv.theshowtime.NetworkClasses.MovieResults;
 import com.example.shiv.theshowtime.R;
 

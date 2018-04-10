@@ -12,10 +12,13 @@ public class MoviesResponseAll {
 public ArrayList<MovieResults> movieResults;
 @SerializedName("page")
 private int page;
-@SerializedName("total_results")
-private int totalpages;
 @SerializedName("total_pages")
+private int totalpages;
+@SerializedName("total_results")
 private int totalResults;
+
+
+
 
     public MoviesResponseAll(ArrayList<MovieResults> movieResults, int page, int totalpages, int totalResults) {
         this.movieResults = movieResults;

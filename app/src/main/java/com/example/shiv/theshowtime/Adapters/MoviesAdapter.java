@@ -7,15 +7,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.shiv.theshowtime.Activities.MovieDetailActivity;
+import com.example.shiv.theshowtime.Activities.ViewAllMoviesActivity;
+import com.example.shiv.theshowtime.NetworkClasses.Constants;
 import com.example.shiv.theshowtime.NetworkClasses.MovieResults;
 import com.example.shiv.theshowtime.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import static android.support.v4.content.ContextCompat.startActivity;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder>{
 
@@ -61,12 +66,6 @@ onItemClickListener listener;
 
       final MovieResults results=movieResults.get(position);
       holder.movieTitle.setText(results.getOriginTitle());
-      holder.itemView.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              listener.onItemClick(holder.getAdapterPosition());
-          }
-      });
 
         Picasso.get().load("http://image.tmdb.org/t/p/w780"+results.getBackdropPath()).into(holder.movieThumbnail);
        holder.rating.setText(results.getVotesAvg()+"");
@@ -74,12 +73,9 @@ onItemClickListener listener;
            @Override
            public void onClick(View v) {
 
-               Intent intent=new Intent(mcontext,MovieDetailActivity.class);
-               intent.putExtra("MovieId",results.getId());
-               mcontext.startActivity(intent);
-
-
-
+          Intent intent=new Intent(mcontext,MovieDetailActivity.class);
+          intent.putExtra(Constants.MOVIE_ID,results.getId());
+          mcontext.startActivity(intent);
 
            }
        });
@@ -95,7 +91,8 @@ onItemClickListener listener;
     public class ViewHolder extends RecyclerView.ViewHolder{
 
  TextView movieTitle,rating;
- ImageView movieThumbnail,menuMore;
+ ImageView movieThumbnail;
+ ImageButton favadder;
  View itemView;
 
     public ViewHolder(View itemView) {
@@ -104,7 +101,7 @@ onItemClickListener listener;
         this.itemView=itemView;
         movieThumbnail=itemView.findViewById(R.id.moviethumb);
         movieTitle=itemView.findViewById(R.id.movietitle);
-        menuMore=itemView.findViewById(R.id.menumore);
+        favadder=itemView.findViewById(R.id.favadder);
         rating=itemView.findViewById(R.id.rating);
     }
 }

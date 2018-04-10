@@ -6,7 +6,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/movies"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@mipmap/ic_theaters_black_36dp"
             android:title="MOVIES" />
         <item
             android:id="@+id/tvshows"

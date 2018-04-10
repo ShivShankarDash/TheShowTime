@@ -13,6 +13,7 @@
         android:elevation="3dp"
         app:cardCornerRadius="8dp"
         android:layout_margin="5dp"
+
         >
 
    <RelativeLayout
@@ -65,17 +66,25 @@
            android:textColor="#000000"
            android:textSize="20dp"
            android:fontFamily="cursive"
+           android:textStyle="bold"
            />
 
-       <ImageView
-           android:id="@+id/menumore"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
+       <ImageButton
+           android:layout_width="40dp"
+           android:layout_height="40dp"
+           android:src="@mipmap/ic_star_border_black_36dp"
+           android:layout_alignParentBottom="true"
+           android:layout_alignParentEnd="true"
+           android:layout_marginBottom="11dp"
+           android:layout_marginEnd="13dp"
            android:scaleType="centerCrop"
-           app:srcCompat="@android:drawable/ic_menu_more"
-           android:layout_below="@+id/moviethumb"
-           android:layout_alignParentRight="true"
+           android:id="@+id/favadder"
+           android:background="?attr/selectableItemBackgroundBorderless"
+
            />
+
+
+
 
    </RelativeLayout>
 
