@@ -3,6 +3,7 @@ package com.example.shiv.theshowtime.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,6 +81,19 @@ onItemClickListener listener;
            }
        });
 
+       holder.movieThumbnail.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+
+               Intent intent=new Intent(mcontext,MovieDetailActivity.class);
+               intent.putExtra(Constants.MOVIE_ID,results.getId());
+               mcontext.startActivity(intent);
+
+           }
+       });
+
+
+
     }
 
     @Override
@@ -94,6 +108,7 @@ onItemClickListener listener;
  ImageView movieThumbnail;
  ImageButton favadder;
  View itemView;
+ CardView cardView;
 
     public ViewHolder(View itemView) {
 
@@ -103,7 +118,17 @@ onItemClickListener listener;
         movieTitle=itemView.findViewById(R.id.movietitle);
         favadder=itemView.findViewById(R.id.favadder);
         rating=itemView.findViewById(R.id.rating);
+        cardView=itemView.findViewById(R.id.card_view);
     }
-}
+
+
+
+
+
+    }
+
+
+
+
 
 }
