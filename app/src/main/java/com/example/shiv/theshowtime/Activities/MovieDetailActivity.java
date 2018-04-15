@@ -9,17 +9,27 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.shiv.theshowtime.Adapters.MovieCastAdapter;
+import com.example.shiv.theshowtime.Adapters.VideosAdapter;
 import com.example.shiv.theshowtime.MoviesApi;
 import com.example.shiv.theshowtime.NetworkClasses.Constants;
 import com.example.shiv.theshowtime.NetworkClasses.Genres;
+import com.example.shiv.theshowtime.NetworkClasses.MovieCastBrief;
+import com.example.shiv.theshowtime.NetworkClasses.MovieCreditsResponse;
 import com.example.shiv.theshowtime.NetworkClasses.MovieDetails;
 import com.example.shiv.theshowtime.NetworkClasses.MovieResults;
+import com.example.shiv.theshowtime.NetworkClasses.YoutubeVideo;
+import com.example.shiv.theshowtime.NetworkClasses.YoutubeVideoResponse;
 import com.example.shiv.theshowtime.R;
 import com.squareup.picasso.Picasso;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -49,6 +59,16 @@ private LinearLayout MovieRatingLinearLayout;
 
 private AVLoadingIndicatorView mPosterProgressBar;
 
+private RecyclerView mTrailerRecyclerView;
+private List<YoutubeVideo> mTrailers;
+private VideosAdapter mTrailerAdapter;
+private TextView mTrailerTextView;
+
+    private TextView mCastTextView;
+    private RecyclerView mCastRecyclerView;
+    private List<MovieCastBrief> mCasts;
+    private MovieCastAdapter mCastAdapter;
+
 
 private ImageView movieposter;
 private TextView ReadMoretext;
@@ -61,13 +81,13 @@ private TextView yearOfReleasetext;
 private TextView movieRating;
 private Call<MovieDetails> mMovieDetailsCall;
 private TextView revenueandbudget;
+//private ImageView trailerPlayButton;
 
 
 private LinearLayout mDetailsLayout;
 
 
 ArrayList<MovieDetails> movieDetailslist=new ArrayList<>();
-
 
 
 
@@ -104,6 +124,22 @@ ArrayList<MovieDetails> movieDetailslist=new ArrayList<>();
     mtoolbar=findViewById(R.id.toolbarmoviedetail);
     ToolbarConstraintLayout=findViewById(R.id.toolbarconstraintlayout);
     MovieRatingLinearLayout=findViewById(R.id.layout_rating_movie_detail);
+   // trailerPlayButton=findViewById(R.id.trailerplayimage);
+        mTrailerTextView = (TextView) findViewById(R.id.text_view_trailer_movie_detail);
+        mTrailerRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_trailers_movie_detail);
+        (new LinearSnapHelper()).attachToRecyclerView(mTrailerRecyclerView);
+        mTrailers = new ArrayList<>();
+        mTrailerAdapter = new VideosAdapter(MovieDetailActivity.this, mTrailers);
+        mTrailerRecyclerView.setAdapter(mTrailerAdapter);
+        mTrailerRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
+
+        mCastTextView = (TextView) findViewById(R.id.text_view_cast_movie_detail);
+        mCastRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_cast_movie_detail);
+        mCasts = new ArrayList<>();
+        mCastAdapter = new MovieCastAdapter(MovieDetailActivity.this, mCasts);
+        mCastRecyclerView.setAdapter(mCastAdapter);
+        mCastRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
+
 
     loadActivity();
 
@@ -197,6 +233,8 @@ ArrayList<MovieDetails> movieDetailslist=new ArrayList<>();
 
                   OverViewtext.setVisibility(View.VISIBLE);
                   OverViewtext.setText(response.body().getOverview());
+                  setTrailers();
+                  setCasts();
                   ReadMoretext.setOnClickListener(new View.OnClickListener() {
                       @Override
                       public void onClick(View v) {
@@ -204,14 +242,15 @@ ArrayList<MovieDetails> movieDetailslist=new ArrayList<>();
                           mDetailsLayout.setVisibility(View.VISIBLE);
                           ReadMoretext.setVisibility(View.GONE);
 
+                          setDetails(response.body().getReleaseDate(),response.body().getRuntime());
+                          revenueandbudget.setText(response.body().getBudget()+"$\n"+response.body().getRevenue()+"$");
+
                       }
                   });
               }
                else
                    OverViewtext.setText("");
 
-               setDetails(response.body().getReleaseDate(),response.body().getRuntime());
-               revenueandbudget.setText(response.body().getBudget()+"$\n"+response.body().getRevenue()+"$");
 
             }
 
@@ -224,6 +263,96 @@ ArrayList<MovieDetails> movieDetailslist=new ArrayList<>();
 
             }
         });
+
+
+
+
+    }
+
+    private void setCasts() {
+
+        final Retrofit retrofit=new Retrofit.Builder()
+                .baseUrl("https://api.themoviedb.org/3/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MoviesApi moviesApi=retrofit.create(MoviesApi.class);
+        Call<MovieCreditsResponse> call=moviesApi.getMovieCredits((int) mMovieId,getString(R.string.Movie_DB_Api_key));
+        call.enqueue(new Callback<MovieCreditsResponse>() {
+            @Override
+            public void onResponse(Call<MovieCreditsResponse> call, Response<MovieCreditsResponse> response) {
+
+                MovieCreditsResponse movieCreditsResponse=response.body();
+                if(movieCreditsResponse.getCasts()!=null){
+
+                mCasts.clear();
+                mCasts.addAll(movieCreditsResponse.getCasts());
+                mCastAdapter.notifyDataSetChanged();
+
+
+                }
+                mCastTextView.setVisibility(View.VISIBLE);
+               mCastRecyclerView.setVisibility(View.VISIBLE);
+
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call<MovieCreditsResponse> call, Throwable t) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+    }
+
+    private void setTrailers() {
+
+
+        final Retrofit retrofit=new Retrofit.Builder()
+                .baseUrl("https://api.themoviedb.org/3/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MoviesApi moviesApi=retrofit.create(MoviesApi.class);
+        Call<YoutubeVideoResponse> call=moviesApi.getMovieTrailers((int) mMovieId, getResources().getString(R.string.Movie_DB_Api_key));
+        call.enqueue(new Callback<YoutubeVideoResponse>() {
+            @Override
+            public void onResponse(Call<YoutubeVideoResponse> call, Response<YoutubeVideoResponse> response) {
+
+                YoutubeVideoResponse youtubeVideoResponse=response.body();
+                Log.d("TAGGER","Array : "+response.body().getVideoresults().get(0).getKey());
+
+                if(youtubeVideoResponse.getVideoresults()!=null){
+
+                    mTrailers.clear();
+                    mTrailers.addAll(youtubeVideoResponse.getVideoresults());
+                    Log.d("TAGGER","Array : "+mTrailers.get(0).getKey());
+                    mTrailerAdapter.notifyDataSetChanged();
+
+
+                }
+                if (!mTrailers.isEmpty()) {
+                     mTrailerTextView.setVisibility(View.VISIBLE);
+                     mTrailerRecyclerView.setVisibility(View.VISIBLE);
+                 //  trailerPlayButton.setVisibility(View.VISIBLE);
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<YoutubeVideoResponse> call, Throwable t) {
+
+            }
+        });
+
 
 
 

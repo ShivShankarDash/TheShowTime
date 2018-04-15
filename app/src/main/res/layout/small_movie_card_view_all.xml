@@ -42,7 +42,7 @@
                 android:paddingTop="8dp"
                 android:textColor="#000000"
                 android:textSize="15dp"
-                android:fontFamily="cursive"
+                android:maxLines="2"
                 android:textStyle="bold"
 
                 />

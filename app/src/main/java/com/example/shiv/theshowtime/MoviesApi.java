@@ -1,8 +1,10 @@
 package com.example.shiv.theshowtime;
 
 import com.example.shiv.theshowtime.NetworkClasses.Constants;
+import com.example.shiv.theshowtime.NetworkClasses.MovieCreditsResponse;
 import com.example.shiv.theshowtime.NetworkClasses.MovieDetails;
 import com.example.shiv.theshowtime.NetworkClasses.MoviesResponseAll;
+import com.example.shiv.theshowtime.NetworkClasses.YoutubeVideoResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -25,8 +27,10 @@ public interface MoviesApi {
   @GET("movie/{id}")
   Call<MovieDetails> getMovieDetails(@Path("id") long movieId, @Query("api_key") String apiKey);
 
+    @GET("movie/{id}/videos")
+    Call<YoutubeVideoResponse> getMovieTrailers(@Path("id") int movieId, @Query("api_key") String apiKey);
 
-
-
+    @GET("movie/{id}/credits")
+    Call<MovieCreditsResponse> getMovieCredits(@Path("id") Integer movieId, @Query("api_key") String apiKey);
 
 }
