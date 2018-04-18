@@ -5,14 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
-import com.example.shiv.theshowtime.Adapters.SmallMoviesAdapter;
 import com.example.shiv.theshowtime.Adapters.ViewAllMoviesAdapter;
 import com.example.shiv.theshowtime.MoviesApi;
 import com.example.shiv.theshowtime.NetworkClasses.Constants;
-import com.example.shiv.theshowtime.NetworkClasses.MovieResults;
-import com.example.shiv.theshowtime.NetworkClasses.MoviesResponseAll;
+import com.example.shiv.theshowtime.NetworkClasses.Movies.MovieResults;
+import com.example.shiv.theshowtime.NetworkClasses.Movies.MoviesResponseAll;
 import com.example.shiv.theshowtime.R;
 
 import java.util.ArrayList;

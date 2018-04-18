@@ -3,7 +3,6 @@ package com.example.shiv.theshowtime.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 
 import com.example.shiv.theshowtime.Activities.MovieDetailActivity;
 import com.example.shiv.theshowtime.NetworkClasses.Constants;
-import com.example.shiv.theshowtime.NetworkClasses.MovieResults;
+import com.example.shiv.theshowtime.NetworkClasses.Movies.MovieResults;
 import com.example.shiv.theshowtime.R;
 import com.squareup.picasso.Picasso;
 

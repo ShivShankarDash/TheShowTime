@@ -19,16 +19,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.shiv.theshowtime.Activities.ViewAllMoviesActivity;
 import com.example.shiv.theshowtime.Adapters.MoviesAdapter;
 import com.example.shiv.theshowtime.Adapters.SmallMoviesAdapter;
 import com.example.shiv.theshowtime.NetworkClasses.Constants;
-import com.example.shiv.theshowtime.NetworkClasses.MovieResults;
+import com.example.shiv.theshowtime.NetworkClasses.Movies.MovieResults;
 import com.example.shiv.theshowtime.MoviesApi;
-import com.example.shiv.theshowtime.NetworkClasses.MoviesResponseAll;
+import com.example.shiv.theshowtime.NetworkClasses.Movies.MoviesResponseAll;
 import com.example.shiv.theshowtime.R;
 import com.jpardogo.android.googleprogressbar.library.ChromeFloatingCirclesDrawable;
 import com.jpardogo.android.googleprogressbar.library.GoogleProgressBar;
@@ -40,8 +39,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static java.lang.System.exit;
 
 public class AllMoviesFragment extends android.support.v4.app.Fragment{
 

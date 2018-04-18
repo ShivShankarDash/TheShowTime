@@ -1,4 +1,4 @@
-package com.example.shiv.theshowtime.NetworkClasses;
+package com.example.shiv.theshowtime.NetworkClasses.Movies;
 
 import java.util.HashMap;
 import java.util.List;

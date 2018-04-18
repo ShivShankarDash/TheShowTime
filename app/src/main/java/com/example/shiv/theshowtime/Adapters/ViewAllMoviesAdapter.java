@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.example.shiv.theshowtime.Activities.MovieDetailActivity;
 import com.example.shiv.theshowtime.NetworkClasses.Constants;
-import com.example.shiv.theshowtime.NetworkClasses.MovieResults;
+import com.example.shiv.theshowtime.NetworkClasses.Movies.MovieResults;
 import com.example.shiv.theshowtime.R;
 import com.squareup.picasso.Picasso;
 

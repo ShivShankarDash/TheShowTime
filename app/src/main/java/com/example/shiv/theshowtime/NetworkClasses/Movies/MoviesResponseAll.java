@@ -1,6 +1,5 @@
-package com.example.shiv.theshowtime.NetworkClasses;
+package com.example.shiv.theshowtime.NetworkClasses.Movies;
 
-import com.example.shiv.theshowtime.NetworkClasses.MovieResults;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;

@@ -2,7 +2,6 @@ package com.example.shiv.theshowtime.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.RequiresPermission;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -21,13 +20,15 @@ import android.widget.TextView;
 
 import com.example.shiv.theshowtime.Adapters.MovieCastAdapter;
 import com.example.shiv.theshowtime.Adapters.VideosAdapter;
+import com.example.shiv.theshowtime.Adapters.ViewAllMoviesAdapter;
 import com.example.shiv.theshowtime.MoviesApi;
 import com.example.shiv.theshowtime.NetworkClasses.Constants;
-import com.example.shiv.theshowtime.NetworkClasses.Genres;
-import com.example.shiv.theshowtime.NetworkClasses.MovieCastBrief;
-import com.example.shiv.theshowtime.NetworkClasses.MovieCreditsResponse;
-import com.example.shiv.theshowtime.NetworkClasses.MovieDetails;
-import com.example.shiv.theshowtime.NetworkClasses.MovieResults;
+import com.example.shiv.theshowtime.NetworkClasses.Movies.Genres;
+import com.example.shiv.theshowtime.NetworkClasses.Movies.MovieCastBrief;
+import com.example.shiv.theshowtime.NetworkClasses.Movies.MovieCreditsResponse;
+import com.example.shiv.theshowtime.NetworkClasses.Movies.MovieDetails;
+import com.example.shiv.theshowtime.NetworkClasses.Movies.MovieResults;
+import com.example.shiv.theshowtime.NetworkClasses.Movies.SimilarMoviesResponse;
 import com.example.shiv.theshowtime.NetworkClasses.YoutubeVideo;
 import com.example.shiv.theshowtime.NetworkClasses.YoutubeVideoResponse;
 import com.example.shiv.theshowtime.R;
@@ -37,7 +38,6 @@ import com.wang.avi.AVLoadingIndicatorView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -49,20 +49,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
-private long mMovieId;
+    private long mMovieId;
 
-private CollapsingToolbarLayout mCollapsingToolBarLayout;
-private AppBarLayout mAppBarLayout;
-private Toolbar mtoolbar;
-private ConstraintLayout ToolbarConstraintLayout;
-private LinearLayout MovieRatingLinearLayout;
+    private CollapsingToolbarLayout mCollapsingToolBarLayout;
+    private AppBarLayout mAppBarLayout;
+    private Toolbar mtoolbar;
+    private ConstraintLayout ToolbarConstraintLayout;
+    private LinearLayout MovieRatingLinearLayout;
 
-private AVLoadingIndicatorView mPosterProgressBar;
+    private AVLoadingIndicatorView mPosterProgressBar;
 
-private RecyclerView mTrailerRecyclerView;
-private List<YoutubeVideo> mTrailers;
-private VideosAdapter mTrailerAdapter;
-private TextView mTrailerTextView;
+    private RecyclerView mTrailerRecyclerView;
+    private List<YoutubeVideo> mTrailers;
+    private VideosAdapter mTrailerAdapter;
+    private TextView mTrailerTextView;
 
     private TextView mCastTextView;
     private RecyclerView mCastRecyclerView;
@@ -70,27 +70,32 @@ private TextView mTrailerTextView;
     private MovieCastAdapter mCastAdapter;
 
 
-private ImageView movieposter;
-private TextView ReadMoretext;
-private TextView OverViewtext;
-private TextView ReleaseAndRunTimeDatetext;
-//private TextView Runtimetext;
-private TextView MovieNametext;
-private  TextView Moviegenretext;
-private TextView yearOfReleasetext;
-private TextView movieRating;
-private Call<MovieDetails> mMovieDetailsCall;
-private TextView revenueandbudget;
+    private ImageView movieposter;
+    private TextView ReadMoretext;
+    private TextView OverViewtext;
+    private TextView ReleaseAndRunTimeDatetext;
+    //private TextView Runtimetext;
+    private TextView MovieNametext;
+    private TextView Moviegenretext;
+    private TextView yearOfReleasetext;
+    private TextView movieRating;
+    private Call<MovieDetails> mMovieDetailsCall;
+    private TextView revenueandbudget;
 //private ImageView trailerPlayButton;
 
+   private View horizontalLine;
+    private LinearLayout mDetailsLayout;
 
-private LinearLayout mDetailsLayout;
+    private TextView mSimilarMoviesTextView;
+    private RecyclerView mSimilarMoviesRecyclerView;
+    private ArrayList<MovieResults> mSimilarMovies;
+    private ViewAllMoviesAdapter mSimilarMoviesAdapter;
 
 
-ArrayList<MovieDetails> movieDetailslist=new ArrayList<>();
 
 
 
+    ArrayList<MovieDetails> movieDetailslist = new ArrayList<>();
 
 
     @Override
@@ -102,29 +107,29 @@ ArrayList<MovieDetails> movieDetailslist=new ArrayList<>();
 
         setTitle("");
 
-        Intent receivedIntent=getIntent();
-        mMovieId=receivedIntent.getLongExtra(Constants.MOVIE_ID,-1);
-        if(mMovieId==-1) finish();
+        Intent receivedIntent = getIntent();
+        mMovieId = receivedIntent.getLongExtra(Constants.MOVIE_ID, -1);
+        if (mMovieId == -1) finish();
 
 
-    movieposter=findViewById(R.id.movieposter);
-    ReadMoretext=findViewById(R.id.text_view_read_more_movie_detail);
-    OverViewtext=findViewById(R.id.text_view_overview_movie_detail);
-    ReleaseAndRunTimeDatetext=findViewById(R.id.text_view_details_movie_detail);
-    MovieNametext=findViewById(R.id.movie_name);
-    Moviegenretext=findViewById(R.id.movie_genre_textView);
-    yearOfReleasetext=findViewById(R.id.yearofrelease);
-    revenueandbudget=findViewById(R.id.revenueandbudget);
- //   budget=findViewById(R.id.budget);
-    mPosterProgressBar=findViewById(R.id.posterprogressbar);
-    movieRating=findViewById(R.id.text_view_rating_movie_detail);
-    mDetailsLayout=findViewById(R.id.layout_details_movie_detail);
-    mAppBarLayout=findViewById(R.id.appbar);
-    mCollapsingToolBarLayout=findViewById(R.id.collapsing_toolbar);
-    mtoolbar=findViewById(R.id.toolbarmoviedetail);
-    ToolbarConstraintLayout=findViewById(R.id.toolbarconstraintlayout);
-    MovieRatingLinearLayout=findViewById(R.id.layout_rating_movie_detail);
-   // trailerPlayButton=findViewById(R.id.trailerplayimage);
+        movieposter = findViewById(R.id.movieposter);
+        ReadMoretext = findViewById(R.id.text_view_read_more_movie_detail);
+        OverViewtext = findViewById(R.id.text_view_overview_movie_detail);
+        ReleaseAndRunTimeDatetext = findViewById(R.id.text_view_details_movie_detail);
+        MovieNametext = findViewById(R.id.movie_name);
+        Moviegenretext = findViewById(R.id.movie_genre_textView);
+        yearOfReleasetext = findViewById(R.id.yearofrelease);
+        revenueandbudget = findViewById(R.id.revenueandbudget);
+        //   budget=findViewById(R.id.budget);
+        mPosterProgressBar = findViewById(R.id.posterprogressbar);
+        movieRating = findViewById(R.id.text_view_rating_movie_detail);
+        mDetailsLayout = findViewById(R.id.layout_details_movie_detail);
+        mAppBarLayout = findViewById(R.id.appbar);
+        mCollapsingToolBarLayout = findViewById(R.id.collapsing_toolbar);
+        mtoolbar = findViewById(R.id.toolbarmoviedetail);
+        ToolbarConstraintLayout = findViewById(R.id.toolbarconstraintlayout);
+        MovieRatingLinearLayout = findViewById(R.id.layout_rating_movie_detail);
+        // trailerPlayButton=findViewById(R.id.trailerplayimage);
         mTrailerTextView = (TextView) findViewById(R.id.text_view_trailer_movie_detail);
         mTrailerRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_trailers_movie_detail);
         (new LinearSnapHelper()).attachToRecyclerView(mTrailerRecyclerView);
@@ -139,16 +144,21 @@ ArrayList<MovieDetails> movieDetailslist=new ArrayList<>();
         mCastAdapter = new MovieCastAdapter(MovieDetailActivity.this, mCasts);
         mCastRecyclerView.setAdapter(mCastAdapter);
         mCastRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        horizontalLine=findViewById(R.id.view_horizontal_line);
 
 
-    loadActivity();
+        mSimilarMoviesTextView = (TextView) findViewById(R.id.text_view_similar_movie_detail);
+        mSimilarMoviesRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_similar_movie_detail);
+        mSimilarMovies = new ArrayList<>();
+        mSimilarMoviesAdapter = new ViewAllMoviesAdapter(mSimilarMovies,MovieDetailActivity.this);
+        mSimilarMoviesRecyclerView.setAdapter(mSimilarMoviesAdapter);
+        mSimilarMoviesRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
 
 
 
 
 
-
-
+        loadActivity();
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -159,13 +169,6 @@ ArrayList<MovieDetails> movieDetailslist=new ArrayList<>();
                         .setAction("Action", null).show();
 
 
-
-
-
-
-
-
-
             }
         });
     }
@@ -173,89 +176,84 @@ ArrayList<MovieDetails> movieDetailslist=new ArrayList<>();
     private void loadActivity() {
 
 
-        final Retrofit retrofit=new Retrofit.Builder()
+        final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        MoviesApi moviesApi=retrofit.create(MoviesApi.class);
-        Call<MovieDetails> call=moviesApi.getMovieDetails(mMovieId,getString(R.string.Movie_DB_Api_key));
+        MoviesApi moviesApi = retrofit.create(MoviesApi.class);
+        Call<MovieDetails> call = moviesApi.getMovieDetails(mMovieId, getString(R.string.Movie_DB_Api_key));
 
         call.enqueue(new Callback<MovieDetails>() {
             @Override
             public void onResponse(Call<MovieDetails> call, final Response<MovieDetails> response) {
 
-                MovieDetails movieDetails=response.body();
-                if(movieDetails==null){
+                MovieDetails movieDetails = response.body();
+                if (movieDetails == null) {
                     return;
                 }
 
-             mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-                 @Override
-                 public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                    @Override
+                    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
 
-                     if(appBarLayout.getTotalScrollRange()+verticalOffset==0){
-                         if (response.body().getTitle()!=null)
-                             mCollapsingToolBarLayout.setTitle(response.body().getTitle());
-                         else
-                             mCollapsingToolBarLayout.setTitle("");
-                         mtoolbar.setVisibility(View.VISIBLE);
+                        if (appBarLayout.getTotalScrollRange() + verticalOffset == 0) {
+                            if (response.body().getTitle() != null)
+                                mCollapsingToolBarLayout.setTitle(response.body().getTitle());
+                            else
+                                mCollapsingToolBarLayout.setTitle("");
+                            mtoolbar.setVisibility(View.VISIBLE);
 
-                     }
+                        } else {
 
-                     else{
+                            mCollapsingToolBarLayout.setTitle("");
+                            mtoolbar.setVisibility(View.INVISIBLE);
 
-                         mCollapsingToolBarLayout.setTitle("");
-                         mtoolbar.setVisibility(View.INVISIBLE);
+                        }
 
-                     }
+                    }
+                });
+                mPosterProgressBar.setVisibility(View.GONE);
+                Picasso.get().load("http://image.tmdb.org/t/p/original" + response.body().getBackdropPath()).into(movieposter);
 
-                 }
-             });
-                 mPosterProgressBar.setVisibility(View.GONE);
-                Picasso.get().load("http://image.tmdb.org/t/p/original"+response.body().getBackdropPath()).into(movieposter);
+                if (response.body().getTitle() != null)
+                    MovieNametext.setText(response.body().getTitle());
 
-              if(response.body().getTitle()!=null)
-                  MovieNametext.setText(response.body().getTitle());
+                else
+                    MovieNametext.setText("");
 
-              else
-                  MovieNametext.setText("");
+                setGenres(response.body().getGenres());
+                setYear(response.body().getReleaseDate());
+                ToolbarConstraintLayout.setVisibility(View.VISIBLE);
 
-              setGenres(response.body().getGenres());
-              setYear(response.body().getReleaseDate());
-              ToolbarConstraintLayout.setVisibility(View.VISIBLE);
+                if (response.body().getVoteAverage() != null && response.body().getVoteAverage() != 0)
+                    movieRating.setText(response.body().getVoteAverage() + "");
+                MovieRatingLinearLayout.setVisibility(View.VISIBLE);
 
-              if(response.body().getVoteAverage()!=null&&response.body().getVoteAverage()!=0)
-              movieRating.setText(response.body().getVoteAverage()+"");
-              MovieRatingLinearLayout.setVisibility(View.VISIBLE);
+                if (response.body().getOverview() != null && !response.body().getOverview().trim().isEmpty()) {
+                    ReadMoretext.setVisibility(View.VISIBLE);
 
-              if(response.body().getOverview()!=null && !response.body().getOverview().trim().isEmpty()) {
-                  ReadMoretext.setVisibility(View.VISIBLE);
+                    OverViewtext.setVisibility(View.VISIBLE);
+                    OverViewtext.setText(response.body().getOverview());
+                    setTrailers();
+                    setCasts();
+                    setSimilarMovies();
+                    ReadMoretext.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            OverViewtext.setMaxLines(Integer.MAX_VALUE);
+                            mDetailsLayout.setVisibility(View.VISIBLE);
+                            ReadMoretext.setVisibility(View.GONE);
 
-                  OverViewtext.setVisibility(View.VISIBLE);
-                  OverViewtext.setText(response.body().getOverview());
-                  setTrailers();
-                  setCasts();
-                  ReadMoretext.setOnClickListener(new View.OnClickListener() {
-                      @Override
-                      public void onClick(View v) {
-                          OverViewtext.setMaxLines(Integer.MAX_VALUE);
-                          mDetailsLayout.setVisibility(View.VISIBLE);
-                          ReadMoretext.setVisibility(View.GONE);
+                            setDetails(response.body().getReleaseDate(), response.body().getRuntime());
+                            revenueandbudget.setText(response.body().getBudget() + "$\n" + response.body().getRevenue() + "$");
 
-                          setDetails(response.body().getReleaseDate(),response.body().getRuntime());
-                          revenueandbudget.setText(response.body().getBudget()+"$\n"+response.body().getRevenue()+"$");
-
-                      }
-                  });
-              }
-               else
-                   OverViewtext.setText("");
+                        }
+                    });
+                } else
+                    OverViewtext.setText("");
 
 
             }
-
-
-
 
 
             @Override
@@ -265,36 +263,73 @@ ArrayList<MovieDetails> movieDetailslist=new ArrayList<>();
         });
 
 
+    }
+
+    private void setSimilarMovies() {
+
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.themoviedb.org/3/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MoviesApi moviesApi = retrofit.create(MoviesApi.class);
+       Call<SimilarMoviesResponse> call=moviesApi.getSimilarMovies((int)mMovieId,getString(R.string.Movie_DB_Api_key),1);
+
+   call.enqueue(new Callback<SimilarMoviesResponse>() {
+       @Override
+       public void onResponse(Call<SimilarMoviesResponse> call, Response<SimilarMoviesResponse> response) {
+
+           SimilarMoviesResponse similarMoviesResponse=response.body();
+           if(similarMoviesResponse.getResults()!=null){
+
+               mSimilarMovies.clear();
+               mSimilarMovies.addAll(similarMoviesResponse.getResults());
+               mSimilarMoviesAdapter.notifyDataSetChanged();
+
+
+           }
+
+           mSimilarMoviesTextView.setVisibility(View.VISIBLE);
+
+
+
+       }
+
+       @Override
+       public void onFailure(Call<SimilarMoviesResponse> call, Throwable t) {
+
+       }
+   });
+
+
+
+
 
 
     }
 
     private void setCasts() {
 
-        final Retrofit retrofit=new Retrofit.Builder()
+        final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        MoviesApi moviesApi=retrofit.create(MoviesApi.class);
-        Call<MovieCreditsResponse> call=moviesApi.getMovieCredits((int) mMovieId,getString(R.string.Movie_DB_Api_key));
+        MoviesApi moviesApi = retrofit.create(MoviesApi.class);
+        Call<MovieCreditsResponse> call = moviesApi.getMovieCredits((int) mMovieId, getString(R.string.Movie_DB_Api_key));
         call.enqueue(new Callback<MovieCreditsResponse>() {
             @Override
             public void onResponse(Call<MovieCreditsResponse> call, Response<MovieCreditsResponse> response) {
 
-                MovieCreditsResponse movieCreditsResponse=response.body();
-                if(movieCreditsResponse.getCasts()!=null){
+                MovieCreditsResponse movieCreditsResponse = response.body();
+                if (movieCreditsResponse.getCasts() != null) {
 
-                mCasts.clear();
-                mCasts.addAll(movieCreditsResponse.getCasts());
-                mCastAdapter.notifyDataSetChanged();
+                    mCasts.clear();
+                    mCasts.addAll(movieCreditsResponse.getCasts());
+                    mCastAdapter.notifyDataSetChanged();
 
 
                 }
                 mCastTextView.setVisibility(View.VISIBLE);
-               mCastRecyclerView.setVisibility(View.VISIBLE);
-
-
-
+                mCastRecyclerView.setVisibility(View.VISIBLE);
 
             }
 
@@ -305,44 +340,38 @@ ArrayList<MovieDetails> movieDetailslist=new ArrayList<>();
         });
 
 
-
-
-
-
-
-
     }
 
     private void setTrailers() {
 
 
-        final Retrofit retrofit=new Retrofit.Builder()
+        final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        MoviesApi moviesApi=retrofit.create(MoviesApi.class);
-        Call<YoutubeVideoResponse> call=moviesApi.getMovieTrailers((int) mMovieId, getResources().getString(R.string.Movie_DB_Api_key));
+        MoviesApi moviesApi = retrofit.create(MoviesApi.class);
+        Call<YoutubeVideoResponse> call = moviesApi.getMovieTrailers((int) mMovieId, getResources().getString(R.string.Movie_DB_Api_key));
         call.enqueue(new Callback<YoutubeVideoResponse>() {
             @Override
             public void onResponse(Call<YoutubeVideoResponse> call, Response<YoutubeVideoResponse> response) {
 
-                YoutubeVideoResponse youtubeVideoResponse=response.body();
-                Log.d("TAGGER","Array : "+response.body().getVideoresults().get(0).getKey());
+                YoutubeVideoResponse youtubeVideoResponse = response.body();
+                Log.d("TAGGER", "Array : " + response.body().getVideoresults().get(0).getKey());
 
-                if(youtubeVideoResponse.getVideoresults()!=null){
+                if (youtubeVideoResponse.getVideoresults() != null) {
 
                     mTrailers.clear();
                     mTrailers.addAll(youtubeVideoResponse.getVideoresults());
-                    Log.d("TAGGER","Array : "+mTrailers.get(0).getKey());
+                    Log.d("TAGGER", "Array : " + mTrailers.get(0).getKey());
                     mTrailerAdapter.notifyDataSetChanged();
 
 
                 }
                 if (!mTrailers.isEmpty()) {
-                     mTrailerTextView.setVisibility(View.VISIBLE);
-                     mTrailerRecyclerView.setVisibility(View.VISIBLE);
-                 //  trailerPlayButton.setVisibility(View.VISIBLE);
-
+                    mTrailerTextView.setVisibility(View.VISIBLE);
+                    mTrailerRecyclerView.setVisibility(View.VISIBLE);
+                    //  trailerPlayButton.setVisibility(View.VISIBLE);
+                    horizontalLine.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -352,9 +381,6 @@ ArrayList<MovieDetails> movieDetailslist=new ArrayList<>();
 
             }
         });
-
-
-
 
 
     }
@@ -410,7 +436,7 @@ ArrayList<MovieDetails> movieDetailslist=new ArrayList<>();
 
     private void setGenres(List<Genres> genresList) {
 
-    String genres="";
+        String genres = "";
         if (genresList != null) {
             for (int i = 0; i < genresList.size(); i++) {
                 if (genresList.get(i) == null) continue;
