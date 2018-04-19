@@ -21,12 +21,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.ViewAllMoviesActivity" />
         <activity
             android:name=".Activities.MovieDetailActivity"
             android:label="@string/title_activity_movie_detail"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activities.VideoPlayer"></activity>
+        <activity android:name=".Activities.ViewAllMoviesActivity" />
+        <activity android:name=".Activities.VideoPlayer" />
+        <activity android:name=".Activities.ViewAllTVShowsActivity" />
+        <activity
+            android:name=".Activities.TVShowDetailActivity"
+            android:label="@string/title_activity_tvshow_detail"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

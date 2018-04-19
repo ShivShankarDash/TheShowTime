@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 
 import com.example.shiv.theshowtime.Adapters.MoviesAdapter;
 import com.example.shiv.theshowtime.Fragments.AllMoviesFragment;
+import com.example.shiv.theshowtime.Fragments.TvShowsFragment;
 import com.example.shiv.theshowtime.NetworkClasses.Movies.MovieResults;
 import com.example.shiv.theshowtime.R;
 
@@ -93,7 +94,7 @@ setFragment(new AllMoviesFragment());
 //                          .baseUrl("https://api.themoviedb.org/")
 //                          .addConverterFactory(GsonConverterFactory.create())
 //                          .build();
-//        MoviesApi moviesApi=retrofit.create(MoviesApi.class);
+//        MoviesAndTVShowsApi moviesApi=retrofit.create(MoviesAndTVShowsApi.class);
 //        Call<MoviesResponseAll> call=moviesApi.getlatest();
 //
 //        call.enqueue(new Callback<MoviesResponseAll>() {
@@ -186,6 +187,11 @@ setFragment(new AllMoviesFragment());
 
 
         } else if (id == R.id.tvshows) {
+
+            setTitle("TV SHOWS");
+            setFragment(new TvShowsFragment());
+            return true;
+
 
         } else if (id == R.id.nav_slideshow) {
 

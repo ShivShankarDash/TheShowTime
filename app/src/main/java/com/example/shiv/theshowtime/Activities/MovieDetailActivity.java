@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.example.shiv.theshowtime.Adapters.MovieCastAdapter;
 import com.example.shiv.theshowtime.Adapters.VideosAdapter;
 import com.example.shiv.theshowtime.Adapters.ViewAllMoviesAdapter;
-import com.example.shiv.theshowtime.MoviesApi;
+import com.example.shiv.theshowtime.MoviesAndTVShowsApi;
 import com.example.shiv.theshowtime.NetworkClasses.Constants;
 import com.example.shiv.theshowtime.NetworkClasses.Movies.Genres;
 import com.example.shiv.theshowtime.NetworkClasses.Movies.MovieCastBrief;
@@ -180,8 +180,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        MoviesApi moviesApi = retrofit.create(MoviesApi.class);
-        Call<MovieDetails> call = moviesApi.getMovieDetails(mMovieId, getString(R.string.Movie_DB_Api_key));
+        MoviesAndTVShowsApi moviesAndTVShowsApi = retrofit.create(MoviesAndTVShowsApi.class);
+        Call<MovieDetails> call = moviesAndTVShowsApi.getMovieDetails(mMovieId, getString(R.string.Movie_DB_Api_key));
 
         call.enqueue(new Callback<MovieDetails>() {
             @Override
@@ -271,8 +271,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        MoviesApi moviesApi = retrofit.create(MoviesApi.class);
-       Call<SimilarMoviesResponse> call=moviesApi.getSimilarMovies((int)mMovieId,getString(R.string.Movie_DB_Api_key),1);
+        MoviesAndTVShowsApi moviesAndTVShowsApi = retrofit.create(MoviesAndTVShowsApi.class);
+       Call<SimilarMoviesResponse> call= moviesAndTVShowsApi.getSimilarMovies((int)mMovieId,getString(R.string.Movie_DB_Api_key),1);
 
    call.enqueue(new Callback<SimilarMoviesResponse>() {
        @Override
@@ -313,8 +313,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        MoviesApi moviesApi = retrofit.create(MoviesApi.class);
-        Call<MovieCreditsResponse> call = moviesApi.getMovieCredits((int) mMovieId, getString(R.string.Movie_DB_Api_key));
+        MoviesAndTVShowsApi moviesAndTVShowsApi = retrofit.create(MoviesAndTVShowsApi.class);
+        Call<MovieCreditsResponse> call = moviesAndTVShowsApi.getMovieCredits((int) mMovieId, getString(R.string.Movie_DB_Api_key));
         call.enqueue(new Callback<MovieCreditsResponse>() {
             @Override
             public void onResponse(Call<MovieCreditsResponse> call, Response<MovieCreditsResponse> response) {
@@ -349,8 +349,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        MoviesApi moviesApi = retrofit.create(MoviesApi.class);
-        Call<YoutubeVideoResponse> call = moviesApi.getMovieTrailers((int) mMovieId, getResources().getString(R.string.Movie_DB_Api_key));
+        MoviesAndTVShowsApi moviesAndTVShowsApi = retrofit.create(MoviesAndTVShowsApi.class);
+        Call<YoutubeVideoResponse> call = moviesAndTVShowsApi.getMovieTrailers((int) mMovieId, getResources().getString(R.string.Movie_DB_Api_key));
         call.enqueue(new Callback<YoutubeVideoResponse>() {
             @Override
             public void onResponse(Call<YoutubeVideoResponse> call, Response<YoutubeVideoResponse> response) {

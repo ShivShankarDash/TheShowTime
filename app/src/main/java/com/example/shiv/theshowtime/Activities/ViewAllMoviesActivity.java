@@ -7,7 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.example.shiv.theshowtime.Adapters.ViewAllMoviesAdapter;
-import com.example.shiv.theshowtime.MoviesApi;
+import com.example.shiv.theshowtime.MoviesAndTVShowsApi;
 import com.example.shiv.theshowtime.NetworkClasses.Constants;
 import com.example.shiv.theshowtime.NetworkClasses.Movies.MovieResults;
 import com.example.shiv.theshowtime.NetworkClasses.Movies.MoviesResponseAll;
@@ -128,29 +128,29 @@ public class ViewAllMoviesActivity extends AppCompatActivity implements Callback
                 .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        final MoviesApi moviesApi=retrofit.create(MoviesApi.class);
+        final MoviesAndTVShowsApi moviesAndTVShowsApi =retrofit.create(MoviesAndTVShowsApi.class);
         msmoothProgressBar.progressiveStart();
 
         switch (mMovieType){
 
             case Constants.NOW_SHOWING_MOVIES_TYPE:
-                 final Call<MoviesResponseAll> mNowShowingCall = moviesApi.getlatest(getString(R.string.Movie_DB_Api_key), "en-US", presentPage);
+                 final Call<MoviesResponseAll> mNowShowingCall = moviesAndTVShowsApi.getlatest(getString(R.string.Movie_DB_Api_key), "en-US", presentPage);
                  mNowShowingCall.enqueue(this);
 
             break;
             case Constants.POPULAR_MOVIES_TYPE:
-                Call<MoviesResponseAll> mNowShowingCall1=moviesApi.getPopular(getString(R.string.Movie_DB_Api_key),"en-US",presentPage);
+                Call<MoviesResponseAll> mNowShowingCall1= moviesAndTVShowsApi.getPopular(getString(R.string.Movie_DB_Api_key),"en-US",presentPage);
                 mNowShowingCall1.enqueue(this);
 
                 break;
 
             case Constants.UPCOMING_MOVIES_TYPE:
-                Call<MoviesResponseAll> mNowShowingCall2=moviesApi.getUpcoming(getString(R.string.Movie_DB_Api_key),"en-US",presentPage);
+                Call<MoviesResponseAll> mNowShowingCall2= moviesAndTVShowsApi.getUpcoming(getString(R.string.Movie_DB_Api_key),"en-US",presentPage);
                 mNowShowingCall2.enqueue(this);
                 break;
 
             case Constants.TOP_RATED_MOVIES_TYPE:
-                Call<MoviesResponseAll> mNowShowingCall3=moviesApi.getTopRated(getString(R.string.Movie_DB_Api_key),"en-US",presentPage);
+                Call<MoviesResponseAll> mNowShowingCall3= moviesAndTVShowsApi.getTopRated(getString(R.string.Movie_DB_Api_key),"en-US",presentPage);
                 mNowShowingCall3.enqueue(this);
                 break;
 

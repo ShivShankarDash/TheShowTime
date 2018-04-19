@@ -24,9 +24,9 @@ import android.widget.TextView;
 import com.example.shiv.theshowtime.Activities.ViewAllMoviesActivity;
 import com.example.shiv.theshowtime.Adapters.MoviesAdapter;
 import com.example.shiv.theshowtime.Adapters.SmallMoviesAdapter;
+import com.example.shiv.theshowtime.MoviesAndTVShowsApi;
 import com.example.shiv.theshowtime.NetworkClasses.Constants;
 import com.example.shiv.theshowtime.NetworkClasses.Movies.MovieResults;
-import com.example.shiv.theshowtime.MoviesApi;
 import com.example.shiv.theshowtime.NetworkClasses.Movies.MoviesResponseAll;
 import com.example.shiv.theshowtime.R;
 import com.jpardogo.android.googleprogressbar.library.ChromeFloatingCirclesDrawable;
@@ -198,8 +198,8 @@ public class AllMoviesFragment extends android.support.v4.app.Fragment{
                 .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        MoviesApi moviesApi=retrofit.create(MoviesApi.class);
-        Call<MoviesResponseAll> call=moviesApi.getTopRated(getString(R.string.Movie_DB_Api_key),"en-US",1);
+        MoviesAndTVShowsApi moviesAndTVShowsApi =retrofit.create(MoviesAndTVShowsApi.class);
+        Call<MoviesResponseAll> call= moviesAndTVShowsApi.getTopRated(getString(R.string.Movie_DB_Api_key),"en-US",1);
         call.enqueue(new Callback<MoviesResponseAll>() {
             @Override
             public void onResponse(Call<MoviesResponseAll> call, Response<MoviesResponseAll> response) {
@@ -235,8 +235,8 @@ public class AllMoviesFragment extends android.support.v4.app.Fragment{
                 .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        MoviesApi moviesApi=retrofit.create(MoviesApi.class);
-        Call<MoviesResponseAll> call=moviesApi.getUpcoming(getString(R.string.Movie_DB_Api_key),"en-US",1);
+        MoviesAndTVShowsApi moviesAndTVShowsApi =retrofit.create(MoviesAndTVShowsApi.class);
+        Call<MoviesResponseAll> call= moviesAndTVShowsApi.getUpcoming(getString(R.string.Movie_DB_Api_key),"en-US",1);
 
         call.enqueue(new Callback<MoviesResponseAll>() {
             @Override
@@ -276,8 +276,8 @@ public class AllMoviesFragment extends android.support.v4.app.Fragment{
                 .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        MoviesApi moviesApi=retrofit.create(MoviesApi.class);
-       Call<MoviesResponseAll> call=moviesApi.getPopular(getString(R.string.Movie_DB_Api_key),"en-US",1);
+        MoviesAndTVShowsApi moviesAndTVShowsApi =retrofit.create(MoviesAndTVShowsApi.class);
+       Call<MoviesResponseAll> call= moviesAndTVShowsApi.getPopular(getString(R.string.Movie_DB_Api_key),"en-US",1);
 
       call.enqueue(new Callback<MoviesResponseAll>() {
           @Override
@@ -337,8 +337,8 @@ public class AllMoviesFragment extends android.support.v4.app.Fragment{
                 .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        MoviesApi moviesApi=retrofit.create(MoviesApi.class);
-        Call<MoviesResponseAll> call=moviesApi.getlatest(getString(R.string.Movie_DB_Api_key),"en-US",1);
+        MoviesAndTVShowsApi moviesAndTVShowsApi =retrofit.create(MoviesAndTVShowsApi.class);
+        Call<MoviesResponseAll> call= moviesAndTVShowsApi.getlatest(getString(R.string.Movie_DB_Api_key),"en-US",1);
 
         call.enqueue(new Callback<MoviesResponseAll>() {
             @Override
